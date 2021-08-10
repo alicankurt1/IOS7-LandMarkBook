@@ -10,13 +10,11 @@ import UIKit
 class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
       
     @IBOutlet weak var landMarkTableView: UITableView!
-    var landMarkNames = [String]()
-    var landMarkInfo = [String]()
-    var landMarkImages = [UIImage]()
     
-    var selectedLandName = ""
-    var selectedLandInfo = ""
-    var selectedLandImage = UIImage()
+    var landArray = [Land]()
+    var choosenLand : Land?
+    
+   
     
     
     
@@ -27,27 +25,23 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
         landMarkTableView.delegate = self
         landMarkTableView.dataSource = self
         
-        landMarkNames.append("Cinque Terre - Italy")
-        landMarkNames.append("Arashiyama Bamboo Grove - Japan")
-        landMarkNames.append("Banff National Park - Canada")
-        landMarkNames.append("Kapadokya - Turkey")
-        landMarkNames.append("Mount Kilimanjaro - Tanzania")
-        landMarkNames.append("Cliffs of Moher - Ireland")
+        // creating objects
         
-        
-        landMarkInfo.append("Popular with locals and tourists alike, the Cinque Terre is truly worth the trip. You can reach this beautiful destination of five villages by car, train or boat.")
-        landMarkInfo.append("A short bus ride from the outskirts of Kyoto, Arashiyama Bamboo Grove is known for its beauty, unique nature sounds and natural light.")
-        landMarkInfo.append("Although this spectacular landscape includes the Rocky Mountains, the lakes in the area make Banff National Park special.")
-        landMarkInfo.append("Known for its cone-shaped rock formations and stunning hot air balloon displays, this destination has become a well-deserved must-have on many travellers' lists.")
-        landMarkInfo.append("One of the most beautiful places in the world can be found in Tanzania, Africa.")
-        landMarkInfo.append("The Cliffs of Moher have quickly become popular in recent years. All travelers should include the Cliffs of Moher on their must-see list when visiting Ireland.")
-        
-        landMarkImages.append(UIImage(named: "cinqueterre")!)
-        landMarkImages.append(UIImage(named: "arashiyama")!)
-        landMarkImages.append(UIImage(named: "banff")!)
-        landMarkImages.append(UIImage(named: "kapadokya")!)
-        landMarkImages.append(UIImage(named: "klimanjaro")!)
-        landMarkImages.append(UIImage(named: "moher")!)
+        var info =  "Popular with locals and tourists alike, the Cinque Terre is truly worth the trip. You can reach this beautiful destination of five villages by car, train or boat."
+        var cinque = Land(name: "Cinque Terre - Italy", info: info, image: UIImage(named: "cinqueterre")!)
+        info = "A short bus ride from the outskirts of Kyoto, Arashiyama Bamboo Grove is known for its beauty, unique nature sounds and natural light."
+        var arashiyama = Land(name: "Arashiyama Bamboo Grove - Japan", info: info, image: UIImage(named: "arashiyama")!)
+        info = "Although this spectacular landscape includes the Rocky Mountains, the lakes in the area make Banff National Park special."
+        var banff = Land(name: "Banff National Park - Canada", info: info, image: UIImage(named: "banff")!)
+        info = "Known for its cone-shaped rock formations and stunning hot air balloon displays, this destination has become a well-deserved must-have on many travellers' lists."
+        var kapadokya = Land(name: "Kapadokya - Turkey", info: info, image: UIImage(named: "kapadokya")!)
+        info = "One of the most beautiful places in the world can be found in Tanzania, Africa."
+        var kilimanjaro = Land(name: "Mount Kilimanjaro - Tanzania", info: info, image: UIImage(named: "klimanjaro")!)
+        info = "The Cliffs of Moher have quickly become popular in recent years. All travelers should include the Cliffs of Moher on their must-see list when visiting Ireland."
+        var moher = Land(name: "Cliffs of Moher - Ireland", info: info, image: UIImage(named: "moher")!)
+                
+     
+        landArray.append(contentsOf: [cinque,arashiyama,banff,kapadokya,kilimanjaro,moher])
         
         navigationItem.title = "Land Mark Book"
         
@@ -60,21 +54,19 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
     // it make for each row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        cell.textLabel?.text = landMarkNames[indexPath.row]
+        cell.textLabel?.text = landArray[indexPath.row].name
         return cell
     }
     
     // there are how many row
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return landMarkNames.count
+        return landArray.count
     }
     
     // its use for edit such as delete,insert
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
-            landMarkNames.remove(at: indexPath.row)
-            landMarkInfo.remove(at: indexPath.row)
-            landMarkImages.remove(at: indexPath.row)
+            landArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
         }
             
@@ -82,10 +74,7 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     // its use when you select a row
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedLandName = landMarkNames[indexPath.row]
-        selectedLandInfo = landMarkInfo[indexPath.row]
-        selectedLandImage = landMarkImages[indexPath.row]
-        
+        choosenLand = landArray[indexPath.row]
         performSegue(withIdentifier: "toDetailSegue", sender: nil)
     }
     
@@ -93,9 +82,7 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toDetailSegue"{
             let destinationVC = segue.destination as! DetailViewController
-            destinationVC.selectedLandName = selectedLandName
-            destinationVC.selectedLandInfo = selectedLandInfo
-            destinationVC.selectedLandImage = selectedLandImage
+            destinationVC.selectedLand = choosenLand
         }
     }
     

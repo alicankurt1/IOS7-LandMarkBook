@@ -12,17 +12,15 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var infoLabel: UILabel!
     
-    var selectedLandName = ""
-    var selectedLandInfo = ""
-    var selectedLandImage = UIImage()
+    var selectedLand : Land?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        titleLabel.text = selectedLandName
-        infoLabel.text = selectedLandInfo
-        landImageView.image = selectedLandImage
+        titleLabel.text = selectedLand?.name
+        infoLabel.text = selectedLand?.info
+        landImageView.image = selectedLand?.image
         
     }
     
